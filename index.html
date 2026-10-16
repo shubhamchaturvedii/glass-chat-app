@@ -3,420 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Liquid Glass Chat</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Private Secure Chat</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #121212; color: #e0e0e0; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 
-    body {
-      background: #03050c;
-      color: #ffffff;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      position: relative;
-    }
+    /* Clean Header */
+    header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #1f1f1f; border-bottom: 1px solid #2c2c2c; }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .avatar { width: 38px; height: 38px; border-radius: 50%; background: #333; overflow: hidden; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .info h3 { font-size: 0.95rem; color: #fff; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .status { font-size: 0.72rem; color: #888; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #666; display: inline-block; }
+    .dot.online { background: #22c55e; }
 
-    /* Animated Aurora Liquid Mesh Background */
-    .aurora-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(75px);
-      opacity: 0.65;
-      animation: drift 14s infinite alternate ease-in-out;
-    }
-    .orb-1 {
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, #2563eb, #1e1b4b);
-      top: -10%; left: -15%;
-    }
-    .orb-2 {
-      width: 280px; height: 280px;
-      background: radial-gradient(circle, #06b6d4, #0f172a);
-      bottom: 5%; right: -20%;
-      animation-delay: -5s;
-    }
-    .orb-3 {
-      width: 200px; height: 200px;
-      background: radial-gradient(circle, #4f46e5, transparent);
-      top: 40%; left: 30%;
-      opacity: 0.4;
-      animation-duration: 18s;
-    }
+    .header-actions { display: flex; gap: 8px; }
+    .icon-btn { background: #2c2c2c; border: none; color: #ccc; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; }
 
-    @keyframes drift {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(30px, -25px) scale(1.12); }
-      100% { transform: translate(-20px, 30px) scale(0.95); }
-    }
+    /* Chat Messages Box */
+    #chat-box { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; background: #0b0b0b; }
+    .msg { max-width: 78%; padding: 10px 14px; border-radius: 14px; font-size: 0.92rem; line-height: 1.4; word-wrap: break-word; }
+    .sent { background: #005c4b; color: #e9edef; align-self: flex-end; border-bottom-right-radius: 3px; }
+    .received { background: #202c33; color: #e9edef; align-self: flex-start; border-bottom-left-radius: 3px; }
+    .meta { font-size: 0.62rem; color: rgba(255,255,255,0.5); margin-top: 3px; text-align: right; }
 
-    /* Floating Liquid Glass Header (Dynamic Island Vibe) */
-    .header-wrap {
-      position: relative;
-      z-index: 20;
-      padding: 12px 14px 4px 14px;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 18px;
-      border-radius: 28px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03));
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.5),
-        inset 0 1px 1px rgba(255, 255, 255, 0.35);
-    }
+    /* Input Footer */
+    footer { display: flex; padding: 10px 12px; background: #1f1f1f; border-top: 1px solid #2c2c2c; gap: 8px; align-items: center; }
+    input[type="text"] { flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid #333; background: #2a2a2a; color: #fff; font-size: 0.95rem; outline: none; }
+    input:focus { border-color: #00a884; }
+    .send-btn { background: #00a884; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
 
-    .partner-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .header-avatar {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1.5px solid rgba(255, 255, 255, 0.3);
-      padding: 2px;
-      position: relative;
-    }
-    .header-avatar img {
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-    .status-dot {
-      position: absolute;
-      bottom: 0; right: 0;
-      width: 11px; height: 11px;
-      border-radius: 50%;
-      background: #64748b;
-      border: 2px solid #090d16;
-      transition: all 0.3s ease;
-    }
-    .status-dot.online {
-      background: #00f2fe;
-      box-shadow: 0 0 10px #00f2fe;
-    }
-
-    .user-details {
-      display: flex;
-      flex-direction: column;
-    }
-    .partner-name {
-      font-size: 0.98rem;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      color: #f8fafc;
-    }
-    .status-text {
-      font-size: 0.72rem;
-      color: rgba(255, 255, 255, 0.55);
-      font-weight: 500;
-    }
-
-    /* Glowing Moon & Action Controls */
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .moon-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 10px;
-      border-radius: 20px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .moon-sphere {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #ffffff, #cbd5e1);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
-      transition: all 0.6s ease;
-    }
-    .streak-num {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #e2e8f0;
-    }
-
-    .icon-btn {
-      width: 34px; height: 34px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: rgba(255, 255, 255, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .icon-btn:active {
-      transform: scale(0.9);
-      background: rgba(255, 255, 255, 0.18);
-    }
-
-    /* Chat Area */
-    #chat-box {
-      position: relative;
-      z-index: 5;
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px 16px 45px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      scroll-behavior: smooth;
-    }
-    #chat-box::-webkit-scrollbar { display: none; }
-
-    /* True Liquid Glass Message Bubbles */
-    .msg {
-      max-width: 78%;
-      padding: 11px 15px;
-      border-radius: 22px;
-      font-size: 0.92rem;
-      line-height: 1.45;
-      position: relative;
-      word-wrap: break-word;
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
-      animation: msgSlide 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    @keyframes msgSlide {
-      from { opacity: 0; transform: translateY(14px) scale(0.96); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* Sent Bubble: Cyan/Blue Liquid Glass */
-    .sent {
-      align-self: flex-end;
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.28), rgba(37, 99, 235, 0.42));
-      border: 1px solid rgba(125, 211, 252, 0.4);
-      border-bottom-right-radius: 6px;
-      box-shadow: 
-        0 8px 24px rgba(2, 132, 199, 0.22),
-        inset 0 1px 1px rgba(255, 255, 255, 0.45);
-      color: #ffffff;
-    }
-
-    /* Received Bubble: Frosted White Glass */
-    .received {
-      align-self: flex-start;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-bottom-left-radius: 6px;
-      box-shadow: 
-        0 8px 24px rgba(0, 0, 0, 0.25),
-        inset 0 1px 1px rgba(255, 255, 255, 0.3);
-      color: #f1f5f9;
-    }
-
-    .meta {
-      font-size: 0.62rem;
-      opacity: 0.6;
-      margin-top: 4px;
-      text-align: right;
-      font-weight: 500;
-    }
-
-    /* Snapchat Style Peeking Bitmoji (Peeks from above the input bar) */
-    #peeker {
-      position: absolute;
-      bottom: 66px;
-      left: 20px;
-      z-index: 15;
-      display: flex;
-      align-items: flex-end;
-      transform: translateY(80px) scale(0.8);
-      opacity: 0;
-      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      pointer-events: none;
-    }
-    #peeker.peeking {
-      transform: translateY(8px) scale(1);
-      opacity: 1;
-    }
-    .peeker-avatar {
-      width: 64px;
-      height: 64px;
-      filter: drop-shadow(0 6px 16px rgba(56, 189, 248, 0.5));
-      transform-origin: bottom center;
-      animation: gentleBob 3s infinite ease-in-out;
-    }
-    @keyframes gentleBob {
-      0%, 100% { transform: rotate(-4deg) translateY(0); }
-      50% { transform: rotate(4deg) translateY(-3px); }
-    }
-
-    /* Thought Bubble for Typing */
-    .typing-cloud {
-      background: rgba(255, 255, 255, 0.16);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 8px 12px;
-      border-radius: 18px;
-      border-bottom-left-radius: 4px;
-      margin-bottom: 32px;
-      margin-left: -4px;
-      display: none;
-      gap: 4px;
-      align-items: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-    #peeker.typing .typing-cloud {
-      display: flex;
-      animation: popCloud 0.25s ease-out;
-    }
-    @keyframes popCloud {
-      from { transform: scale(0.5); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .t-dot {
-      width: 6px; height: 6px;
-      background: #38bdf8;
-      border-radius: 50%;
-      animation: bounce 1.2s infinite;
-    }
-    .t-dot:nth-child(2) { animation-delay: 0.2s; }
-    .t-dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-      40% { transform: translateY(-5px); opacity: 1; }
-    }
-
-    /* Floating Liquid Glass Bottom Input Bar */
-    .footer-wrap {
-      position: relative;
-      z-index: 20;
-      padding: 6px 14px 14px 14px;
-    }
-    footer {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 7px 8px 7px 18px;
-      border-radius: 30px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.5),
-        inset 0 1px 1px rgba(255, 255, 255, 0.35);
-    }
-
-    input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: #ffffff;
-      font-size: 0.95rem;
-      outline: none;
-    }
-    input::placeholder {
-      color: rgba(255, 255, 255, 0.45);
-    }
-
-    .send-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      background: linear-gradient(135deg, #00f2fe, #4facfe);
-      color: #03050c;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
-      transition: transform 0.2s;
-    }
-    .send-btn:active {
-      transform: scale(0.9);
-    }
-
-    /* Custom Liquid Glass Login Modal */
-    #name-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: rgba(3, 5, 12, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .modal-glass {
-      width: 100%;
-      max-width: 340px;
-      padding: 28px 24px;
-      border-radius: 28px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.4);
-      text-align: center;
-    }
-    .modal-glass h2 {
-      font-size: 1.25rem;
-      margin-bottom: 8px;
-    }
-    .modal-glass p {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 20px;
-    }
-    .modal-glass input {
-      width: 100%;
-      padding: 13px 16px;
-      border-radius: 16px;
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff;
-      text-align: center;
-      font-size: 1rem;
-      margin-bottom: 16px;
-    }
-    .modal-glass button {
-      width: 100%;
-      padding: 13px;
-      border-radius: 16px;
-      border: none;
-      background: linear-gradient(135deg, #00f2fe, #4facfe);
-      color: #03050c;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
-    }
+    /* Settings & Setup Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal-card { width: 100%; max-width: 320px; background: #1f1f1f; border: 1px solid #333; border-radius: 16px; padding: 20px; color: #fff; }
+    .modal-card h2 { font-size: 1.1rem; margin-bottom: 4px; }
+    .modal-card p { font-size: 0.78rem; color: #888; margin-bottom: 16px; }
+    .modal-card label { font-size: 0.75rem; color: #aaa; display: block; margin-bottom: 4px; }
+    .modal-card input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #121212; color: #fff; font-size: 0.9rem; margin-bottom: 12px; outline: none; }
+    .modal-card button { width: 100%; padding: 10px; border-radius: 8px; background: #00a884; color: #fff; border: none; font-weight: 600; cursor: pointer; }
   </style>
 
   <!-- Firebase Scripts -->
@@ -425,80 +50,44 @@
 </head>
 <body>
 
-  <!-- Cosmic Liquid Mesh Background -->
-  <div class="aurora-bg">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-  </div>
+  <!-- Settings / Setup Modal -->
+  <div id="settings-modal" class="modal-overlay">
+    <div class="modal-card">
+      <h2 id="modal-title">Chat Settings</h2>
+      <p>Apna naam aur Secret Room ID set karein</p>
+      
+      <label>Aapka Naam:</label>
+      <input type="text" id="input-name" placeholder="Jaise: Rahul">
 
-  <!-- Custom Glass Name Setup Modal -->
-  <div id="name-modal">
-    <div class="modal-glass">
-      <h2>Secret Glass Space</h2>
-      <p>Apna naam darj karein</p>
-      <input type="text" id="username-field" placeholder="Your Name..." maxlength="15">
-      <button onclick="saveUsername()">Enter Space</button>
+      <label>Secret Room ID (Dono ke liye same honi chahiye):</label>
+      <input type="text" id="input-room" placeholder="Jaise: secret_chat_99">
+
+      <button onclick="saveSettings()">Save & Start Chat</button>
     </div>
   </div>
 
-  <!-- Floating Glass Pill Header -->
-  <div class="header-wrap">
-    <header>
-      <div class="partner-box">
-        <div class="header-avatar">
-          <img id="header-avatar-img" src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=Snow" alt="Partner">
-          <div id="status-dot" class="status-dot"></div>
-        </div>
-        <div class="user-details">
-          <div id="partner-name" class="partner-name">Waiting...</div>
-          <div id="status-text" class="status-text">Offline</div>
-        </div>
+  <header>
+    <div class="header-left">
+      <div class="avatar"><img id="partner-avatar" src="" alt=""></div>
+      <div class="info">
+        <h3><span id="partner-title">Private Chat</span> <span id="status-dot" class="dot"></span></h3>
+        <div id="status-text" class="status-text">Connecting...</div>
       </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="openSettings()" title="Settings">⚙️</button>
+      <button class="icon-btn" onclick="clearChat()" title="Clear Chat">🗑️</button>
+    </div>
+  </header>
 
-      <div class="header-right">
-        <div class="moon-pill" title="Moon Glow Energy">
-          <div id="moon" class="moon-sphere"></div>
-          <span id="streak-num" class="streak-num">0</span>
-        </div>
-        <button class="icon-btn" onclick="clearChat()" title="Clear Chat">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-          </svg>
-        </button>
-      </div>
-    </header>
-  </div>
-
-  <!-- Messages Container -->
   <div id="chat-box"></div>
 
-  <!-- Snapchat Style Peeking Avatar (Peeks above Input Bar) -->
-  <div id="peeker">
-    <img id="peeker-img" class="peeker-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Lucky" alt="Peeking">
-    <div class="typing-cloud">
-      <div class="t-dot"></div>
-      <div class="t-dot"></div>
-      <div class="t-dot"></div>
-    </div>
-  </div>
-
-  <!-- Floating Glass Input Bar -->
-  <div class="footer-wrap">
-    <footer>
-      <input type="text" id="msg-input" placeholder="Send a glass message..." autocomplete="off">
-      <button class="send-btn" onclick="sendMsg()">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"></line>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-        </svg>
-      </button>
-    </footer>
-  </div>
+  <footer>
+    <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off">
+    <button class="send-btn" onclick="sendMsg()">➤</button>
+  </footer>
 
   <script>
-    // AAPKA FIREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyAcZOL17YwXCJZrltpho6NA98I2ocFNnoc",
       authDomain: "liquid-a283e.firebaseapp.com",
@@ -512,161 +101,112 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const roomId = "private_liquid_room_01";
-    const msgRef = db.ref(`rooms/${roomId}/messages`);
-    const presenceRef = db.ref(`rooms/${roomId}/presence`);
+    let myName = localStorage.getItem("my_chat_name");
+    let roomId = localStorage.getItem("my_room_id");
 
-    const chatBox = document.getElementById("chat-box");
-    const msgInput = document.getElementById("msg-input");
-    const peeker = document.getElementById("peeker");
-    const peekerImg = document.getElementById("peeker-img");
-    const headerAvatarImg = document.getElementById("header-avatar-img");
-    const moon = document.getElementById("moon");
-    const streakNum = document.getElementById("streak-num");
-    const statusDot = document.getElementById("status-dot");
-    const statusText = document.getElementById("status-text");
-    const partnerNameEl = document.getElementById("partner-name");
-    const nameModal = document.getElementById("name-modal");
-
-    let myName = localStorage.getItem("liquid_chat_user");
-    let msgCount = 0;
-    let typingTimer;
-
-    if (!myName) {
-      nameModal.style.display = "flex";
+    const modal = document.getElementById("settings-modal");
+    if (!myName || !roomId) {
+      modal.style.display = "flex";
     } else {
-      initPresence();
+      startChatApp();
     }
 
-    function saveUsername() {
-      const val = document.getElementById("username-field").value.trim();
-      if (!val) return;
-      myName = val;
-      localStorage.setItem("liquid_chat_user", myName);
-      nameModal.style.display = "none";
-      initPresence();
+    function openSettings() {
+      document.getElementById("input-name").value = myName || "";
+      document.getElementById("input-room").value = roomId || "";
+      modal.style.display = "flex";
     }
 
-    // Moon Glow: Pure White -> Ice Cyan -> Electric Neon Blue
-    function updateMoonGlow(count) {
-      streakNum.innerText = count;
-      const ratio = Math.min(count / 30, 1);
-
-      // Interpolate from White (255,255,255) to Electric Blue (0, 210, 255)
-      const r = Math.round(255 - ratio * 255);
-      const g = Math.round(255 - ratio * (255 - 210));
-      const b = 255;
-      const glowSize = 10 + ratio * 26;
-
-      moon.style.background = `radial-gradient(circle at 30% 30%, #ffffff, rgb(${r}, ${g}, ${b}))`;
-      moon.style.boxShadow = `0 0 ${glowSize}px rgb(${r}, ${g}, ${b}), 0 0 ${glowSize * 1.8}px rgba(0, 210, 255, ${ratio})`;
-    }
-
-    function initPresence() {
-      const myPresence = presenceRef.child(myName);
-
-      function setMyState(isOnline, isTyping = false) {
-        myPresence.set({
-          online: isOnline,
-          typing: isTyping,
-          updated: firebase.database.ServerValue.TIMESTAMP
-        });
+    function saveSettings() {
+      const nameVal = document.getElementById("input-name").value.trim();
+      const roomVal = document.getElementById("input-room").value.trim();
+      if (!nameVal || !roomVal) {
+        alert("Dono fields zaroori hain!");
+        return;
       }
+      localStorage.setItem("my_chat_name", nameVal);
+      localStorage.setItem("my_room_id", roomVal);
+      location.reload();
+    }
 
+    function startChatApp() {
+      const msgRef = db.ref(`rooms/${roomId}/messages`);
+      const presenceRef = db.ref(`rooms/${roomId}/presence`);
+
+      const chatBox = document.getElementById("chat-box");
+      const msgInput = document.getElementById("msg-input");
+      const statusDot = document.getElementById("status-dot");
+      const statusText = document.getElementById("status-text");
+      const partnerTitle = document.getElementById("partner-title");
+      const partnerAvatar = document.getElementById("partner-avatar");
+
+      // Presence
+      const myPresence = presenceRef.child(myName);
+      myPresence.set({ online: true, typing: false, updated: firebase.database.ServerValue.TIMESTAMP });
       myPresence.onDisconnect().set({ online: false, typing: false });
-      setMyState(true, false);
 
       document.addEventListener("visibilitychange", () => {
-        setMyState(!document.hidden, false);
+        myPresence.update({ online: !document.hidden });
       });
 
       msgInput.addEventListener("input", () => {
-        setMyState(true, msgInput.value.length > 0);
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => setMyState(true, false), 2000);
+        myPresence.update({ typing: msgInput.value.length > 0 });
       });
 
-      window.setMyStateGlobal = setMyState;
-    }
-
-    // Listen to Partner's Presence (Snapchat Peeking Effect)
-    presenceRef.on("value", (snapshot) => {
-      const users = snapshot.val() || {};
-      for (let user in users) {
-        if (user !== myName) {
-          const state = users[user];
-          partnerNameEl.innerText = user;
-
-          const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(user)}`;
-          peekerImg.src = avatarUrl;
-          headerAvatarImg.src = avatarUrl;
-
-          if (state.online) {
-            peeker.classList.add("peeking");
-            statusDot.classList.add("online");
-            statusText.innerText = state.typing ? "typing right now..." : "Here in chat";
-          } else {
-            peeker.classList.remove("peeking");
-            statusDot.classList.remove("online");
-            statusText.innerText = "Away";
-          }
-
-          if (state.typing && state.online) {
-            peeker.classList.add("typing");
-          } else {
-            peeker.classList.remove("typing");
+      presenceRef.on("value", (snapshot) => {
+        const users = snapshot.val() || {};
+        let found = false;
+        for (let u in users) {
+          if (u !== myName) {
+            found = true;
+            partnerTitle.innerText = u;
+            partnerAvatar.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u)}`;
+            if (users[u].online) {
+              statusDot.classList.add("online");
+              statusText.innerText = users[u].typing ? "typing..." : "online";
+            } else {
+              statusDot.classList.remove("online");
+              statusText.innerText = "offline";
+            }
           }
         }
-      }
-    });
-
-    // Load & Render Messages
-    msgRef.on("child_added", (snapshot) => {
-      const data = snapshot.val();
-      msgCount++;
-      updateMoonGlow(msgCount);
-
-      const div = document.createElement("div");
-      div.className = "msg " + (data.sender === myName ? "sent" : "received");
-
-      const time = data.time ? new Date(data.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "";
-      div.innerHTML = `<div>${data.text}</div><div class="meta">${time}</div>`;
-
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    });
-
-    msgRef.on("value", (snapshot) => {
-      if (!snapshot.exists()) {
-        chatBox.innerHTML = "";
-        msgCount = 0;
-        updateMoonGlow(0);
-      }
-    });
-
-    function sendMsg() {
-      const text = msgInput.value.trim();
-      if (!text || !myName) return;
-
-      msgRef.push({
-        sender: myName,
-        text: text,
-        time: firebase.database.ServerValue.TIMESTAMP
+        if (!found) {
+          partnerTitle.innerText = "Waiting for partner...";
+          statusText.innerText = "Share Room ID with friend";
+          partnerAvatar.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=waiting`;
+        }
       });
 
-      msgInput.value = "";
-      if (window.setMyStateGlobal) window.setMyStateGlobal(true, false);
-    }
+      msgRef.on("child_added", (snapshot) => {
+        const data = snapshot.val();
+        const div = document.createElement("div");
+        div.className = "msg " + (data.sender === myName ? "sent" : "received");
+        const time = data.time ? new Date(data.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "";
+        div.innerHTML = `<div>${data.text}</div><div class="meta">${time}</div>`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
 
-    function clearChat() {
-      if (confirm("Delete all messages for both of you?")) {
-        msgRef.remove();
-      }
-    }
+      msgRef.on("value", (snapshot) => {
+        if (!snapshot.exists()) chatBox.innerHTML = "";
+      });
 
-    msgInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") sendMsg();
-    });
+      window.sendMsg = function() {
+        const text = msgInput.value.trim();
+        if (!text) return;
+        msgRef.push({ sender: myName, text: text, time: firebase.database.ServerValue.TIMESTAMP });
+        msgInput.value = "";
+        myPresence.update({ typing: false });
+      };
+
+      window.clearChat = function() {
+        if (confirm("Saari chat delete karein?")) msgRef.remove();
+      };
+
+      msgInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMsg();
+      });
+    }
   </script>
 </body>
 </html>
