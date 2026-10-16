@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Liquid Glass Private Chat</title>
+  <title>Liquid Glass Chat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background: #060913;
+      background: #03050c;
       color: #ffffff;
       height: 100dvh;
       display: flex;
@@ -23,99 +24,159 @@
       position: relative;
     }
 
-    /* Cosmic Liquid Background Blobs */
-    .bg-blob {
+    /* Animated Aurora Liquid Mesh Background */
+    .aurora-bg {
       position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
+      inset: 0;
       z-index: 0;
-      opacity: 0.55;
+      overflow: hidden;
       pointer-events: none;
     }
-    .blob-1 {
-      width: 260px; height: 260px;
-      background: #1d4ed8;
-      top: -40px; left: -60px;
-      animation: float 9s infinite alternate ease-in-out;
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(75px);
+      opacity: 0.65;
+      animation: drift 14s infinite alternate ease-in-out;
     }
-    .blob-2 {
-      width: 240px; height: 240px;
-      background: #0ea5e9;
-      bottom: 8%; right: -50px;
-      animation: float 11s infinite alternate-reverse ease-in-out;
+    .orb-1 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #2563eb, #1e1b4b);
+      top: -10%; left: -15%;
+    }
+    .orb-2 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, #06b6d4, #0f172a);
+      bottom: 5%; right: -20%;
+      animation-delay: -5s;
+    }
+    .orb-3 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, #4f46e5, transparent);
+      top: 40%; left: 30%;
+      opacity: 0.4;
+      animation-duration: 18s;
     }
 
-    @keyframes float {
+    @keyframes drift {
       0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(25px, 35px) scale(1.1); }
+      50% { transform: translate(30px, -25px) scale(1.12); }
+      100% { transform: translate(-20px, 30px) scale(0.95); }
     }
 
-    /* Liquid Glass Header */
-    header {
+    /* Floating Liquid Glass Header (Dynamic Island Vibe) */
+    .header-wrap {
       position: relative;
-      z-index: 10;
+      z-index: 20;
+      padding: 12px 14px 4px 14px;
+    }
+    header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 18px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+      padding: 12px 18px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03));
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.35);
     }
 
-    .user-info {
-      display: flex;
-      flex-direction: column;
-    }
-    .room-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: 0.4px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .online-dot {
-      width: 9px; height: 9px;
-      border-radius: 50%;
-      background: #64748b;
-      transition: all 0.3s ease;
-    }
-    .online-dot.active {
-      background: #38bdf8;
-      box-shadow: 0 0 10px #38bdf8;
-    }
-    .status-sub {
-      font-size: 0.72rem;
-      color: rgba(255, 255, 255, 0.6);
-      margin-top: 2px;
-    }
-
-    /* Dynamic Moon (White to Blue Glow) */
-    .moon-box {
+    .partner-box {
       display: flex;
       align-items: center;
       gap: 12px;
     }
-    .moon {
-      width: 30px;
-      height: 30px;
+    .header-avatar {
+      width: 40px; height: 40px;
       border-radius: 50%;
-      background: #ffffff;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
-      transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      padding: 2px;
       position: relative;
     }
-    .clear-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: rgba(255, 255, 255, 0.75);
-      padding: 6px 10px;
-      border-radius: 10px;
-      font-size: 0.75rem;
+    .header-avatar img {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .status-dot {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: #64748b;
+      border: 2px solid #090d16;
+      transition: all 0.3s ease;
+    }
+    .status-dot.online {
+      background: #00f2fe;
+      box-shadow: 0 0 10px #00f2fe;
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+    }
+    .partner-name {
+      font-size: 0.98rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: #f8fafc;
+    }
+    .status-text {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.55);
+      font-weight: 500;
+    }
+
+    /* Glowing Moon & Action Controls */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .moon-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .moon-sphere {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffffff, #cbd5e1);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+      transition: all 0.6s ease;
+    }
+    .streak-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    .icon-btn {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+      transition: 0.2s;
+    }
+    .icon-btn:active {
+      transform: scale(0.9);
+      background: rgba(255, 255, 255, 0.18);
     }
 
     /* Chat Area */
@@ -124,162 +185,237 @@
       z-index: 5;
       flex: 1;
       overflow-y: auto;
-      padding: 18px 16px 32px 16px;
+      padding: 16px 16px 45px 16px;
       display: flex;
       flex-direction: column;
       gap: 10px;
       scroll-behavior: smooth;
     }
+    #chat-box::-webkit-scrollbar { display: none; }
 
+    /* True Liquid Glass Message Bubbles */
     .msg {
       max-width: 78%;
-      padding: 10px 14px;
-      border-radius: 18px;
-      font-size: 0.94rem;
-      line-height: 1.4;
+      padding: 11px 15px;
+      border-radius: 22px;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      position: relative;
       word-wrap: break-word;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      animation: msgSlide 0.28s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    @keyframes popIn {
-      from { opacity: 0; transform: translateY(10px) scale(0.95); }
+    @keyframes msgSlide {
+      from { opacity: 0; transform: translateY(14px) scale(0.96); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
+    /* Sent Bubble: Cyan/Blue Liquid Glass */
     .sent {
       align-self: flex-end;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.48), rgba(14, 165, 233, 0.32));
-      border: 1px solid rgba(125, 211, 252, 0.35);
-      border-bottom-right-radius: 4px;
-      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.2);
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.28), rgba(37, 99, 235, 0.42));
+      border: 1px solid rgba(125, 211, 252, 0.4);
+      border-bottom-right-radius: 6px;
+      box-shadow: 
+        0 8px 24px rgba(2, 132, 199, 0.22),
+        inset 0 1px 1px rgba(255, 255, 255, 0.45);
+      color: #ffffff;
     }
 
+    /* Received Bubble: Frosted White Glass */
     .received {
       align-self: flex-start;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-bottom-left-radius: 4px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-bottom-left-radius: 6px;
+      box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.25),
+        inset 0 1px 1px rgba(255, 255, 255, 0.3);
+      color: #f1f5f9;
     }
 
     .meta {
-      font-size: 0.65rem;
-      opacity: 0.55;
+      font-size: 0.62rem;
+      opacity: 0.6;
       margin-top: 4px;
       text-align: right;
+      font-weight: 500;
     }
 
-    /* Snapchat Style Peeking Avatar (Bottom Left) */
+    /* Snapchat Style Peeking Bitmoji (Peeks from above the input bar) */
     #peeker {
       position: absolute;
-      bottom: 74px;
-      left: -65px; /* Default chhipa hua */
-      z-index: 20;
+      bottom: 66px;
+      left: 20px;
+      z-index: 15;
       display: flex;
-      align-items: center;
-      transition: left 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      align-items: flex-end;
+      transform: translateY(80px) scale(0.8);
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
       pointer-events: none;
     }
-    /* Jab samne wala chat par online ho toh slide out hoga */
     #peeker.peeking {
-      left: -6px;
+      transform: translateY(8px) scale(1);
+      opacity: 1;
     }
-    .avatar-circle {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(12px);
-      border: 2px solid rgba(56, 189, 248, 0.7);
-      box-shadow: 0 4px 20px rgba(56, 189, 248, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      transform: rotate(10deg);
+    .peeker-avatar {
+      width: 64px;
+      height: 64px;
+      filter: drop-shadow(0 6px 16px rgba(56, 189, 248, 0.5));
+      transform-origin: bottom center;
+      animation: gentleBob 3s infinite ease-in-out;
     }
-    .avatar-circle img {
-      width: 90%;
-      height: 90%;
-      object-fit: cover;
+    @keyframes gentleBob {
+      0%, 100% { transform: rotate(-4deg) translateY(0); }
+      50% { transform: rotate(4deg) translateY(-3px); }
     }
 
-    /* Typing Dots Bubble */
-    .typing-bubble {
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      padding: 7px 11px;
-      border-radius: 14px;
-      margin-left: 6px;
+    /* Thought Bubble for Typing */
+    .typing-cloud {
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 12px;
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+      margin-bottom: 32px;
+      margin-left: -4px;
       display: none;
       gap: 4px;
       align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    #peeker.typing .typing-bubble {
+    #peeker.typing .typing-cloud {
       display: flex;
+      animation: popCloud 0.25s ease-out;
     }
-    .dot {
-      width: 5px; height: 5px;
+    @keyframes popCloud {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .t-dot {
+      width: 6px; height: 6px;
       background: #38bdf8;
       border-radius: 50%;
       animation: bounce 1.2s infinite;
     }
-    .dot:nth-child(2) { animation-delay: 0.2s; }
-    .dot:nth-child(3) { animation-delay: 0.4s; }
+    .t-dot:nth-child(2) { animation-delay: 0.2s; }
+    .t-dot:nth-child(3) { animation-delay: 0.4s; }
 
     @keyframes bounce {
       0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
       40% { transform: translateY(-5px); opacity: 1; }
     }
 
-    /* Liquid Glass Input Bar */
-    footer {
+    /* Floating Liquid Glass Bottom Input Bar */
+    .footer-wrap {
       position: relative;
-      z-index: 10;
-      padding: 10px 14px 14px 14px;
-      background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      z-index: 20;
+      padding: 6px 14px 14px 14px;
+    }
+    footer {
       display: flex;
-      gap: 10px;
       align-items: center;
+      gap: 10px;
+      padding: 7px 8px 7px 18px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.35);
     }
 
     input {
       flex: 1;
-      padding: 12px 16px;
-      border-radius: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
+      background: transparent;
+      border: none;
+      color: #ffffff;
       font-size: 0.95rem;
       outline: none;
-      transition: border 0.3s;
     }
     input::placeholder {
-      color: rgba(255, 255, 255, 0.4);
-    }
-    input:focus {
-      border-color: rgba(56, 189, 248, 0.7);
-      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.45);
     }
 
     .send-btn {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
-      border: 1px solid rgba(125, 211, 252, 0.4);
-      background: linear-gradient(135deg, #0284c7, #2563eb);
-      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      color: #03050c;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+      transition: transform 0.2s;
+    }
+    .send-btn:active {
+      transform: scale(0.9);
+    }
+
+    /* Custom Liquid Glass Login Modal */
+    #name-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(3, 5, 12, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-glass {
+      width: 100%;
+      max-width: 340px;
+      padding: 28px 24px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.4);
+      text-align: center;
+    }
+    .modal-glass h2 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+    .modal-glass p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 20px;
+    }
+    .modal-glass input {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+    .modal-glass button {
+      width: 100%;
+      padding: 13px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      color: #03050c;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
     }
   </style>
 
@@ -289,72 +425,92 @@
 </head>
 <body>
 
-  <!-- Liquid Background Glows -->
-  <div class="bg-blob blob-1"></div>
-  <div class="bg-blob blob-2"></div>
+  <!-- Cosmic Liquid Mesh Background -->
+  <div class="aurora-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
 
-  <header>
-    <div class="user-info">
-      <div class="room-title">
-        <span id="partner-name">Private Space</span>
-        <div id="online-dot" class="online-dot"></div>
-      </div>
-      <div id="status-text" class="status-sub">Waiting for partner...</div>
-    </div>
-
-    <div class="moon-box">
-      <div id="moon" class="moon" title="Chat Energy Moon"></div>
-      <button class="clear-btn" onclick="clearChat()">Clear</button>
-    </div>
-  </header>
-
-  <div id="chat-box"></div>
-
-  <!-- Snapchat Style Peeking Bitmoji/Avatar -->
-  <div id="peeker">
-    <div class="avatar-circle">
-      <img id="peeker-img" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Partner" alt="avatar">
-    </div>
-    <div class="typing-bubble">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+  <!-- Custom Glass Name Setup Modal -->
+  <div id="name-modal">
+    <div class="modal-glass">
+      <h2>Secret Glass Space</h2>
+      <p>Apna naam darj karein</p>
+      <input type="text" id="username-field" placeholder="Your Name..." maxlength="15">
+      <button onclick="saveUsername()">Enter Space</button>
     </div>
   </div>
 
-  <footer>
-    <input type="text" id="msg-input" placeholder="Message..." autocomplete="off">
-    <button class="send-btn" onclick="sendMsg()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="22" y1="2" x2="11" y2="13"></line>
-        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-      </svg>
-    </button>
-  </footer>
+  <!-- Floating Glass Pill Header -->
+  <div class="header-wrap">
+    <header>
+      <div class="partner-box">
+        <div class="header-avatar">
+          <img id="header-avatar-img" src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=Snow" alt="Partner">
+          <div id="status-dot" class="status-dot"></div>
+        </div>
+        <div class="user-details">
+          <div id="partner-name" class="partner-name">Waiting...</div>
+          <div id="status-text" class="status-text">Offline</div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="moon-pill" title="Moon Glow Energy">
+          <div id="moon" class="moon-sphere"></div>
+          <span id="streak-num" class="streak-num">0</span>
+        </div>
+        <button class="icon-btn" onclick="clearChat()" title="Clear Chat">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+  </div>
+
+  <!-- Messages Container -->
+  <div id="chat-box"></div>
+
+  <!-- Snapchat Style Peeking Avatar (Peeks above Input Bar) -->
+  <div id="peeker">
+    <img id="peeker-img" class="peeker-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Lucky" alt="Peeking">
+    <div class="typing-cloud">
+      <div class="t-dot"></div>
+      <div class="t-dot"></div>
+      <div class="t-dot"></div>
+    </div>
+  </div>
+
+  <!-- Floating Glass Input Bar -->
+  <div class="footer-wrap">
+    <footer>
+      <input type="text" id="msg-input" placeholder="Send a glass message..." autocomplete="off">
+      <button class="send-btn" onclick="sendMsg()">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </footer>
+  </div>
 
   <script>
-    // ==========================================
-    // 1. APNA FIREBASE CONFIG YAHAN PASTE KAREIN
-    // ==========================================
+    // AAPKA FIREBASE CONFIG
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyAcZOL17YwXCJZrltpho6NA98I2ocFNnoc",
+      authDomain: "liquid-a283e.firebaseapp.com",
+      databaseURL: "https://liquid-a283e-default-rtdb.firebaseio.com",
+      projectId: "liquid-a283e",
+      storageBucket: "liquid-a283e.firebasestorage.app",
+      messagingSenderId: "785719171019",
+      appId: "1:785719171019:web:947ce4a9b48a1e3670484e"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
-    // 2. User Setup
-    let myName = localStorage.getItem("liquid_chat_user");
-    if (!myName) {
-      myName = prompt("Apna naam likhein:") || "User1";
-      localStorage.setItem("liquid_chat_user", myName.trim());
-    }
 
     const roomId = "private_liquid_room_01";
     const msgRef = db.ref(`rooms/${roomId}/messages`);
@@ -364,77 +520,95 @@
     const msgInput = document.getElementById("msg-input");
     const peeker = document.getElementById("peeker");
     const peekerImg = document.getElementById("peeker-img");
+    const headerAvatarImg = document.getElementById("header-avatar-img");
     const moon = document.getElementById("moon");
-    const onlineDot = document.getElementById("online-dot");
+    const streakNum = document.getElementById("streak-num");
+    const statusDot = document.getElementById("status-dot");
     const statusText = document.getElementById("status-text");
     const partnerNameEl = document.getElementById("partner-name");
+    const nameModal = document.getElementById("name-modal");
 
+    let myName = localStorage.getItem("liquid_chat_user");
     let msgCount = 0;
     let typingTimer;
 
-    // 3. Moon Glow Function (White -> Sky Blue -> Deep Electric Blue)
+    if (!myName) {
+      nameModal.style.display = "flex";
+    } else {
+      initPresence();
+    }
+
+    function saveUsername() {
+      const val = document.getElementById("username-field").value.trim();
+      if (!val) return;
+      myName = val;
+      localStorage.setItem("liquid_chat_user", myName);
+      nameModal.style.display = "none";
+      initPresence();
+    }
+
+    // Moon Glow: Pure White -> Ice Cyan -> Electric Neon Blue
     function updateMoonGlow(count) {
-      // 35 messages par full neon blue glow ho jayega
-      const ratio = Math.min(count / 35, 1);
-      const r = Math.round(255 - ratio * (255 - 14));
-      const g = Math.round(255 - ratio * (255 - 165));
-      const b = Math.round(255 - ratio * (255 - 233));
-      const spread = 10 + ratio * 28;
+      streakNum.innerText = count;
+      const ratio = Math.min(count / 30, 1);
 
-      moon.style.background = `rgb(${r}, ${g}, ${b})`;
-      moon.style.boxShadow = `0 0 ${spread}px rgb(${r}, ${g}, ${b}), 0 0 ${spread * 1.6}px rgba(14, 165, 233, ${ratio})`;
+      // Interpolate from White (255,255,255) to Electric Blue (0, 210, 255)
+      const r = Math.round(255 - ratio * 255);
+      const g = Math.round(255 - ratio * (255 - 210));
+      const b = 255;
+      const glowSize = 10 + ratio * 26;
+
+      moon.style.background = `radial-gradient(circle at 30% 30%, #ffffff, rgb(${r}, ${g}, ${b}))`;
+      moon.style.boxShadow = `0 0 ${glowSize}px rgb(${r}, ${g}, ${b}), 0 0 ${glowSize * 1.8}px rgba(0, 210, 255, ${ratio})`;
     }
 
-    // 4. Online Presence & Typing State
-    const myPresence = presenceRef.child(myName);
+    function initPresence() {
+      const myPresence = presenceRef.child(myName);
 
-    function setMyState(isOnline, isTyping = false) {
-      myPresence.set({
-        online: isOnline,
-        typing: isTyping,
-        updated: firebase.database.ServerValue.TIMESTAMP
-      });
-    }
-
-    myPresence.onDisconnect().set({ online: false, typing: false });
-    setMyState(true, false);
-
-    // Tab switch ya minimize karne par avatar chhip jayega
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        setMyState(false, false);
-      } else {
-        setMyState(true, false);
+      function setMyState(isOnline, isTyping = false) {
+        myPresence.set({
+          online: isOnline,
+          typing: isTyping,
+          updated: firebase.database.ServerValue.TIMESTAMP
+        });
       }
-    });
 
-    // Typing Listener
-    msgInput.addEventListener("input", () => {
-      setMyState(true, msgInput.value.length > 0);
-      clearTimeout(typingTimer);
-      typingTimer = setTimeout(() => setMyState(true, false), 2000);
-    });
+      myPresence.onDisconnect().set({ online: false, typing: false });
+      setMyState(true, false);
 
-    // 5. Samne wale ka Presence Listen karna (Snapchat Peeking Avatar)
+      document.addEventListener("visibilitychange", () => {
+        setMyState(!document.hidden, false);
+      });
+
+      msgInput.addEventListener("input", () => {
+        setMyState(true, msgInput.value.length > 0);
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => setMyState(true, false), 2000);
+      });
+
+      window.setMyStateGlobal = setMyState;
+    }
+
+    // Listen to Partner's Presence (Snapchat Peeking Effect)
     presenceRef.on("value", (snapshot) => {
       const users = snapshot.val() || {};
-      let partnerFound = false;
-
       for (let user in users) {
         if (user !== myName) {
-          partnerFound = true;
           const state = users[user];
           partnerNameEl.innerText = user;
-          peekerImg.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(user)}`;
+
+          const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(user)}`;
+          peekerImg.src = avatarUrl;
+          headerAvatarImg.src = avatarUrl;
 
           if (state.online) {
             peeker.classList.add("peeking");
-            onlineDot.classList.add("active");
-            statusText.innerText = state.typing ? "typing..." : "In chat right now";
+            statusDot.classList.add("online");
+            statusText.innerText = state.typing ? "typing right now..." : "Here in chat";
           } else {
             peeker.classList.remove("peeking");
-            onlineDot.classList.remove("active");
-            statusText.innerText = "Offline";
+            statusDot.classList.remove("online");
+            statusText.innerText = "Away";
           }
 
           if (state.typing && state.online) {
@@ -446,7 +620,7 @@
       }
     });
 
-    // 6. Messages Load & Display
+    // Load & Render Messages
     msgRef.on("child_added", (snapshot) => {
       const data = snapshot.val();
       msgCount++;
@@ -470,10 +644,9 @@
       }
     });
 
-    // 7. Send & Clear Functions
     function sendMsg() {
       const text = msgInput.value.trim();
-      if (!text) return;
+      if (!text || !myName) return;
 
       msgRef.push({
         sender: myName,
@@ -482,11 +655,11 @@
       });
 
       msgInput.value = "";
-      setMyState(true, false);
+      if (window.setMyStateGlobal) window.setMyStateGlobal(true, false);
     }
 
     function clearChat() {
-      if (confirm("Dono ke phone se saari chat delete karein?")) {
+      if (confirm("Delete all messages for both of you?")) {
         msgRef.remove();
       }
     }
@@ -496,5 +669,4 @@
     });
   </script>
 </body>
-  </html>
-  
+</html>
